@@ -1,30 +1,30 @@
 <template>
   <modal
-    name="login-modal"
+    name="register-modal"
     transition="pop-out"
     :width="modalWidth"
     :focus-trap="true"
-    :height="400"
+    :height="500"
   >
     <div class="box">
       <div class="box-part" id="bp-left">
         <div class="partition" id="partition-register">
-          <div class="partition-title">LOG IN</div>
+          <div class="partition-title">CREATE ACCOUNT</div>
           <div class="partition-form">
             <form autocomplete="false">
               <div class="autocomplete-fix">
                 <input disabled type="password" />
               </div>
+              <input id="n-email" type="text" placeholder="Email" />
               <input id="n-username" type="text" placeholder="Username" />
               <input id="n-password" type="password" placeholder="Password" />
+              <input id="n-password2" type="password" placeholder=" Confirm Password" />
             </form>
             <div class="button-set">
-              <button id="login-btn" @click="Login">
-                <router-link to="/cards">Login</router-link>
-              </button>
+              <button id="register-btn" @click="register">Register</button>
             </div>
             <button class="large-btn facebook-btn">
-              Login with
+              connect with
               <span>facebook</span>
             </button>
           </div>
@@ -47,8 +47,8 @@ export default {
     };
   },
   methods: {
-    login() {
-      alert("login");
+    register() {
+      alert("Register");
     }
   }
 };
@@ -63,7 +63,7 @@ $facebook_color: #3880ff;
   background: $background_color;
   overflow: hidden;
   width: 856px;
-  height: 400px;
+  height: 500px;
   border-radius: 2px;
   box-sizing: border-box;
   box-shadow: 0 0 40px black;
@@ -145,10 +145,7 @@ $facebook_color: #3880ff;
     color: $primary_color;
     outline: none;
   }
-  input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0px 1000px $background_color inset;
-    background-color: transparent;
-  }
+
   button {
     background: $background_color;
     border-radius: 4px;
@@ -167,6 +164,7 @@ $facebook_color: #3880ff;
     font-size: 17px;
     &:hover {
       border-color: mix($primary_color, black, 90%);
+      color: $primary_color;
     }
   }
 
@@ -178,22 +176,13 @@ $facebook_color: #3880ff;
       font-weight: 600;
     }
     &:hover {
-      color: $text_color;
+      color: $text_color !important;
     }
   }
 
   .button-set {
-    margin-bottom: 8px;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    #login-btn a {
-      text-decoration: none;
-      color: $text_color;
-    }
-    #login-btn a:hover {
-      color: $primary_color;
-    }
+    flex-direction: column;
   }
 
   #register-btn,

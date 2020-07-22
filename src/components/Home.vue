@@ -1,12 +1,10 @@
 <template>
   <div>
+    <login />
+    <register />
     <div class="buttons">
-      <button class="buttons__register btn">
-        <router-link to="/register">Zarejestruj się</router-link>
-      </button>
-      <button class="buttons__login btn">
-        <router-link to="/login">Zaloguj się</router-link>
-      </button>
+      <button class="btn" @click="$modal.show('register-modal')">Sign Up</button>
+      <button class="btn" @click="$modal.show('login-modal')">Login</button>
     </div>
     <div class="header">
       <div class="header__title">
@@ -22,7 +20,23 @@
 </template>
 
 <script>
-export default {};
+import Login from "./Login.vue";
+import Register from "./Register.vue";
+export default {
+  name: "home",
+  components: {
+    Login,
+    Register
+  },
+  methods: {
+    showModalLogin() {
+      this.$modal.show(Login, { height: "500px" });
+    },
+    showModalRegister() {
+      this.$modal.show(Register);
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -45,7 +59,7 @@ export default {};
   .btn:hover {
     box-shadow: 1px 1px 30px 0px #fe8400;
   }
-  .btn a {
+  .btn {
     text-decoration: none;
     color: #fff;
   }
