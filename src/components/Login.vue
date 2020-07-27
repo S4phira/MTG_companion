@@ -30,7 +30,7 @@
           </div>
         </div>
       </div>
-      <div class="box-part" id="bp-right">
+      <div class="box-part" id="bp-right" >
         <div class="box-messages"></div>
       </div>
     </div>
@@ -43,7 +43,7 @@ export default {
   name: "LoginModal",
   data() {
     return {
-      modalWidth: MODAL_WIDTH
+      modalWidth: MODAL_WIDTH,
     };
   },
   methods: {
@@ -58,6 +58,7 @@ $background_color: #272727;
 $text_color: #fff;
 $primary_color: #fe8400;
 $facebook_color: #3880ff;
+$randomNumber: random(5);
 
 .box {
   background: $background_color;
@@ -78,8 +79,10 @@ $facebook_color: #3880ff;
     height: 100%;
     width: 50%;
 
+    
+
     &#bp-right {
-      background: url("../assets/backgrounds/2.png") no-repeat top center/cover;
+      background: url("../assets/login/"+ $randomNumber+ ".jpg") no-repeat top center/cover;
     }
   }
 
@@ -158,7 +161,7 @@ $facebook_color: #3880ff;
     font-family: "Open Sans", sans-serif;
     font-weight: 400;
     min-width: 190px;
-    margin-top: 20px;
+    margin-top: 35px;
     color: $text_color;
     cursor: pointer;
     border: 1px solid #dddedf;
@@ -173,7 +176,7 @@ $facebook_color: #3880ff;
   .large-btn {
     width: 100%;
     background: $background_color;
-
+    margin-top: 12%;
     span {
       font-weight: 600;
     }

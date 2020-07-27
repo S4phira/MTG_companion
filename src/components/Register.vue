@@ -58,6 +58,7 @@ $background_color: #272727;
 $text_color: #fff;
 $primary_color: #fe8400;
 $facebook_color: #3880ff;
+$randomNumber: random(5);
 
 .box {
   background: $background_color;
@@ -79,7 +80,8 @@ $facebook_color: #3880ff;
     width: 50%;
 
     &#bp-right {
-      background: url("../assets/backgrounds/2.png") no-repeat top center/cover;
+      background: url("../assets/login/"+$randomNumber+".jpg") no-repeat top
+        center/cover;
     }
   }
 
@@ -110,7 +112,7 @@ $facebook_color: #3880ff;
 
     .partition-title {
       box-sizing: border-box;
-      padding: 30px;
+      padding: 40px;
       width: 100%;
       text-align: center;
       letter-spacing: 1px;
@@ -145,6 +147,10 @@ $facebook_color: #3880ff;
     color: $primary_color;
     outline: none;
   }
+  input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px $background_color inset;
+    background-color: transparent;
+  }
 
   button {
     background: $background_color;
@@ -155,7 +161,7 @@ $facebook_color: #3880ff;
     font-family: "Open Sans", sans-serif;
     font-weight: 400;
     min-width: 190px;
-    margin-top: 20px;
+    margin-top: 35px;
     color: $text_color;
     cursor: pointer;
     border: 1px solid #dddedf;
@@ -182,7 +188,8 @@ $facebook_color: #3880ff;
 
   .button-set {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 
   #register-btn,
@@ -193,7 +200,8 @@ $facebook_color: #3880ff;
   .facebook-btn {
     border-color: $facebook_color;
     color: $facebook_color;
-    &:hover {
+    margin-top: 12%;
+    s &:hover {
       border-color: $facebook_color;
       background: $facebook_color;
     }
