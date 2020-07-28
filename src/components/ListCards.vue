@@ -9,62 +9,83 @@
     </div>
     <div class="listCards" v-if="cards.length != 0">
       <p class="listCards__header">YOUR DECK</p>
-      <p>{{totalItem}} $</p>
-      <div class="listCards__list">
-        <img v-for="cards of cards" :key="cards.name" :src="userCard.img" />
+      <p>cards:{{cards.length}} prize:{{totalItem}} $</p>
+      <div class="listCards__loader">
+        <div v-if="loading" class="loader"></div>
       </div>
-      <button @click="show">Add cards</button>
+      <div class="listCards__list" v-show="!loading">
+        <div class="card-box" v-for="cards of cards" :key="cards.name">
+          <img :src="cards.img" />
+        </div>
+      </div>
+      <router-link to="/addCards">
+        <button class="btn btn--back">Add card</button>
+      </router-link>
     </div>
   </div>
 </template>
 <script>
 import axios from "axios";
+const urlMultiverse = "https://api.scryfall.com/cards/multiverse/";
 export default {
   data() {
     return {
+      loading: false,
       cards: []
     };
   },
-  // computed: {
-  //   totalItem: function() {
-  //     let sum = 0;
-  //     this.userCards.forEach(card => {
-  //       sum += parseFloat(card.prize);
-  //     });
-  //     return sum;
-  //   }
-  // },
-  method: {
-    async getCards() {
-      const res = await axios.get("json/cards.json", {
-        baseURL: window.location.origin
+  mounted() {
+    this.getCardsId();
+  },
+  computed: {
+    totalItem: function() {
+      let sum = 0;
+      this.cards.forEach(card => {
+        sum += parseFloat(card.prize) || 0;
       });
-      console.log(res);
-      this.cards = [
-        {
-          name: res.data.name,
-          img: res.data.image_uris.border_crop,
-          prize: res.data.prices.usd
-        }
-      ];
+      return Math.round(sum);
+    }
+  },
+  methods: {
+    async getCardsId() {
+      this.loading = true;
+      try {
+        const res = await axios.get("cards-id.json");
+        res.data.forEach(card => {
+          this.getCardData(card.id);
+        });
+      } catch (error) {
+        alert(error);
+      }
+    },
+    async getCardData(id) {
+      const response = await axios.get(urlMultiverse + id);
+      this.cards.push({
+        name: response.data.name,
+        img: response.data.image_uris.border_crop,
+        prize: response.data.prices.usd,
+        color: response.data.colors[0]
+      });
+      this.loading = false;
     }
   }
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 $background_color: #161616;
 $background-opacity: rgba(3, 3, 3, 0.404);
 $color-text: #fff;
 $button-color: rgba(3, 3, 3, 0.774);
 .box {
-  min-width: 900px;
-  min-height: auto;
+  width: 90%;
+  height: auto;
   background-color: $background-opacity;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 20px;
   position: relative;
+  margin: 3% 0;
   .noCards {
     p {
       color: $color-text;
@@ -107,9 +128,74 @@ $button-color: rgba(3, 3, 3, 0.774);
     }
     &__list {
       margin: 10px;
-      img {
-        width: 230px;
-        height: 310px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      .card-box {
+        padding: 5px;
+        img {
+          width: 230px;
+          height: 310px;
+        }
+      }
+    }
+    &__loader {
+      .loader,
+      .loader:before,
+      .loader:after {
+        border-radius: 50%;
+        width: 2.5em;
+        height: 2.5em;
+        -webkit-animation-fill-mode: both;
+        animation-fill-mode: both;
+        -webkit-animation: load7 1.8s infinite ease-in-out;
+        animation: load7 1.8s infinite ease-in-out;
+      }
+      .loader {
+        color: #ffffff;
+        font-size: 10px;
+        margin: 0 auto 80px;
+        position: relative;
+        text-indent: -9999em;
+        -webkit-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-animation-delay: -0.16s;
+        animation-delay: -0.16s;
+      }
+      .loader:before,
+      .loader:after {
+        content: "";
+        position: absolute;
+        top: 0;
+      }
+      .loader:before {
+        left: -3.5em;
+        -webkit-animation-delay: -0.32s;
+        animation-delay: -0.32s;
+      }
+      .loader:after {
+        left: 3.5em;
+      }
+      @-webkit-keyframes load7 {
+        0%,
+        80%,
+        100% {
+          box-shadow: 0 2.5em 0 -1.3em;
+        }
+        40% {
+          box-shadow: 0 2.5em 0 0;
+        }
+      }
+      @keyframes load7 {
+        0%,
+        80%,
+        100% {
+          box-shadow: 0 2.5em 0 -1.3em;
+        }
+        40% {
+          box-shadow: 0 2.5em 0 0;
+        }
       }
     }
   }

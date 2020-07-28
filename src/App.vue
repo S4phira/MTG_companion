@@ -15,7 +15,8 @@ body {
 #app {
   font-family: "Rowdies", cursive;
   background-image: url(assets/backgrounds/1.jpg);
-  height: calc(100vh);
+  height: auto;
+  min-height: calc(100vh);
   display: flex;
   align-items: center;
   justify-content: center;

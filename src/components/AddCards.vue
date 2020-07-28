@@ -9,11 +9,11 @@
       <button class="btn" @click="searchCards">Search</button>
     </div>
     <div class="container__loader">
-      <div v-show="loading" class="loader">Loading...</div>
+      <div v-if="loading" class="loader"></div>
     </div>
     <p class="container__error">{{error}}</p>
     <div class="container__cards" v-for="card of card" :key="card.id">
-      <img :src="card.img" />
+      <img :src="card.image_uris.border_crop" />
       <button class="btn" @click="addCard">ADD</button>
     </div>
   </div>
@@ -28,31 +28,30 @@ export default {
     return {
       card: [],
       loading: false,
-      error: ""
+      error: "",
+      search: ""
     };
   },
   methods: {
     async searchCards() {
       this.loading = true;
       this.error = "";
-      this.cards = [];
+      this.card = [];
       try {
         const res = await axios.get(urlScryfall + this.search);
-        this.card = [
-          {
-            name: res.data.name,
-            img: res.data.image_uris.border_crop,
-            prize: res.data.prices.usd
-          }
-        ];
+        this.card.push(res.data);
       } catch (error) {
         this.error = error.response.data.details;
       }
       this.loading = false;
       this.search = "";
     },
-    async addCards() {
-      await axios.post("/public/cards.json", "hello=world");
+    async addCard() {
+      const res = await axios.post(
+        "http://localhost/public/cards.json",
+        this.card
+      );
+      console.log(res);
     }
   }
 };

@@ -35,8 +35,8 @@
   {
     "name": "Audacious Thief",
     "prices": {
-      "usd": null,
-      "eur": null
+      "usd": "0.06",
+      "eur": "0.06"
     },
     "colors": ["B"],
     "mana_cost": "{2}{B}",
