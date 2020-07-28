@@ -1,19 +1,39 @@
 <template>
   <div style="width:90%">
     <div class="leftMenu">
-      <div class="color color--red" @click="selectedColor='R',searchColor('R')">
+      <div
+        class="color color--red"
+        @click="searchColor('R')"
+        :class="{ colorSelect: selectedColor=='R' && search}"
+      >
         <img src="../assets/logo/R.svg" />
       </div>
-      <div class="color color--white" @click="selectedColor='W',searchColor('W')">
+      <div
+        class="color color--white"
+        @click="searchColor('W')"
+        :class="{ colorSelect: selectedColor=='W' && search}"
+      >
         <img src="../assets/logo/W.svg" />
       </div>
-      <div class="color color--blue" @click="selectedColor='U',searchColor('U')">
+      <div
+        class="color color--blue"
+        @click="searchColor('U')"
+        :class="{ colorSelect: selectedColor=='U'&& search}"
+      >
         <img src="../assets/logo/U.svg" />
       </div>
-      <div class="color color--black" @click="selectedColor='B',searchColor('B')">
+      <div
+        class="color color--black"
+        @click="searchColor('B')"
+        :class="{ colorSelect: selectedColor=='B' && search}"
+      >
         <img src="../assets/logo/B.svg" />
       </div>
-      <div class="color color--green" @click="selectedColor='G',searchColor('G')">
+      <div
+        class="color color--green"
+        @click="searchColor('G')"
+        :class="{ colorSelect:selectedColor=='G' && search}"
+      >
         <img src="../assets/logo/G.svg" />
       </div>
     </div>
@@ -83,9 +103,13 @@ export default {
       });
       this.loading = false;
     },
-    searchColor(c) {
-      this.selectedCards = this.cards.filter((card) => card.color === c);
-      this.search = !this.search;
+    searchColor(color) {
+      console.log(this.selectedColor === color);
+      if (this.selectedColor === color || this.selectedColor == "") {
+        this.search = !this.search;
+      }
+      this.selectedCards = this.cards.filter((card) => card.color === color);
+      this.selectedColor = color;
     },
     totalItems(array) {
       let sum = 0;
@@ -241,7 +265,20 @@ $button-color: rgba(3, 3, 3, 0.774);
     }
   }
   .color:hover {
-    width: 110%;
+    width: 100px;
+    img {
+      width: 70px;
+      height: 70px;
+      margin-left: 20px;
+    }
+  }
+  .colorSelect {
+    width: 100px;
+    img {
+      width: 70px;
+      height: 70px;
+      margin-left: 20px;
+    }
   }
 }
 </style>
