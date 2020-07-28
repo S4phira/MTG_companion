@@ -1,26 +1,47 @@
 <template>
-  <div class="box">
-    <div class="noCards" v-if="cards.length == 0">
-      <p>Nie masz żadnych dodanych kart.</p>
-      <p>kliknij "Rozpocznij" aby dodać</p>
-      <router-link to="/addCards">
-        <button>Rozpocznij</button>
-      </router-link>
+  <div style="width:90%">
+    <div class="leftMenu">
+      <div class="color color--red" @click="selectedColor='R',searchColor('R')">
+        <img src="../assets/logo/R.svg" />
+      </div>
+      <div class="color color--white" @click="selectedColor='W',searchColor('W')">
+        <img src="../assets/logo/W.svg" />
+      </div>
+      <div class="color color--blue" @click="selectedColor='U',searchColor('U')">
+        <img src="../assets/logo/U.svg" />
+      </div>
+      <div class="color color--black" @click="selectedColor='B',searchColor('B')">
+        <img src="../assets/logo/B.svg" />
+      </div>
+      <div class="color color--green" @click="selectedColor='G',searchColor('G')">
+        <img src="../assets/logo/G.svg" />
+      </div>
     </div>
-    <div class="listCards" v-if="cards.length != 0">
-      <p class="listCards__header">YOUR DECK</p>
-      <p>cards:{{cards.length}} prize:{{totalItem}} $</p>
-      <div class="listCards__loader">
-        <div v-if="loading" class="loader"></div>
+    <div class="box">
+      <div class="noCards" v-if="cards.length == 0">
+        <p>Nie masz żadnych dodanych kart.</p>
+        <p>kliknij "Rozpocznij" aby dodać</p>
+        <router-link to="/addCards">
+          <button>Rozpocznij</button>
+        </router-link>
       </div>
-      <div class="listCards__list" v-show="!loading">
-        <div class="card-box" v-for="cards of cards" :key="cards.name">
-          <img :src="cards.img" />
+      <div class="listCards" v-if="cards.length != 0">
+        <p class="listCards__header">YOUR DECK</p>
+        <p v-if="!search">cards:{{cards.length}} prize:{{totalItems(cards)}} $</p>
+        <p v-else>cards:{{selectedCards.length}} prize:{{totalItems(selectedCards)}} $</p>
+        <div class="listCards__loader">
+          <div v-if="loading" class="loader"></div>
         </div>
+        <div class="listCards__list" v-show="!loading">
+          <div class="card-box" v-for="cards of cards" :key="cards.name">
+            <img :src="cards.img" v-if="search" v-show="cards.color == selectedColor" />
+            <img :src="cards.img" v-else />
+          </div>
+        </div>
+        <router-link to="/addCards">
+          <button class="btn btn--back">Add card</button>
+        </router-link>
       </div>
-      <router-link to="/addCards">
-        <button class="btn btn--back">Add card</button>
-      </router-link>
     </div>
   </div>
 </template>
@@ -31,27 +52,21 @@ export default {
   data() {
     return {
       loading: false,
-      cards: []
+      selectedColor: "",
+      selectedCards: [],
+      search: false,
+      cards: [],
     };
   },
   mounted() {
     this.getCardsId();
-  },
-  computed: {
-    totalItem: function() {
-      let sum = 0;
-      this.cards.forEach(card => {
-        sum += parseFloat(card.prize) || 0;
-      });
-      return Math.round(sum);
-    }
   },
   methods: {
     async getCardsId() {
       this.loading = true;
       try {
         const res = await axios.get("cards-id.json");
-        res.data.forEach(card => {
+        res.data.forEach((card) => {
           this.getCardData(card.id);
         });
       } catch (error) {
@@ -64,11 +79,22 @@ export default {
         name: response.data.name,
         img: response.data.image_uris.border_crop,
         prize: response.data.prices.usd,
-        color: response.data.colors[0]
+        color: response.data.colors[0],
       });
       this.loading = false;
-    }
-  }
+    },
+    searchColor(c) {
+      this.selectedCards = this.cards.filter((card) => card.color === c);
+      this.search = !this.search;
+    },
+    totalItems(array) {
+      let sum = 0;
+      array.forEach((card) => {
+        sum += parseFloat(card.prize) || 0;
+      });
+      return Math.round(sum);
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -85,7 +111,7 @@ $button-color: rgba(3, 3, 3, 0.774);
   justify-content: center;
   border-radius: 20px;
   position: relative;
-  margin: 3% 0;
+  margin: 3% auto;
   .noCards {
     p {
       color: $color-text;
@@ -132,10 +158,10 @@ $button-color: rgba(3, 3, 3, 0.774);
       flex-wrap: wrap;
       justify-content: center;
       .card-box {
-        padding: 5px;
         img {
           width: 230px;
           height: 310px;
+          padding: 5px;
         }
       }
     }
@@ -198,6 +224,24 @@ $button-color: rgba(3, 3, 3, 0.774);
         }
       }
     }
+  }
+}
+.leftMenu {
+  position: absolute;
+  left: 0;
+  width: 3.5%;
+  top: 30%;
+  .color {
+    background-color: $background-opacity;
+    padding-right: 10px;
+    margin-bottom: 5px;
+    border-radius: 0 25px 25px 0;
+    img {
+      padding: 10px 0;
+    }
+  }
+  .color:hover {
+    width: 110%;
   }
 }
 </style>
