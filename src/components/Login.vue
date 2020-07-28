@@ -30,7 +30,7 @@
           </div>
         </div>
       </div>
-      <div class="box-part" id="bp-right" >
+      <div class="box-part" id="bp-right">
         <div class="box-messages"></div>
       </div>
     </div>
@@ -43,7 +43,7 @@ export default {
   name: "LoginModal",
   data() {
     return {
-      modalWidth: MODAL_WIDTH,
+      modalWidth: MODAL_WIDTH
     };
   },
   methods: {
@@ -58,10 +58,14 @@ $background_color: #272727;
 $text_color: #fff;
 $primary_color: #fe8400;
 $facebook_color: #3880ff;
-$randomNumber: random(5);
+$randomNumber: random(3);
 
 .box {
-  background: $background_color;
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(83, 100, 152, 1) 100%
+  );
   overflow: hidden;
   width: 856px;
   height: 400px;
@@ -79,10 +83,9 @@ $randomNumber: random(5);
     height: 100%;
     width: 50%;
 
-    
-
     &#bp-right {
-      background: url("../assets/login/"+ $randomNumber+ ".jpg") no-repeat top center/cover;
+      background: url("../assets/login/"+$randomNumber+".jpg") no-repeat top
+        center/cover;
     }
   }
 
@@ -117,7 +120,7 @@ $randomNumber: random(5);
       width: 100%;
       text-align: center;
       letter-spacing: 1px;
-      font-size: 26px;
+      font-size: 35px;
       font-weight: 300;
     }
 
@@ -129,7 +132,7 @@ $randomNumber: random(5);
 
   input[type="password"],
   input[type="text"] {
-    background-color: $background_color;
+    background-color: transparent;
     display: block;
     box-sizing: border-box;
     margin-bottom: 4px;
@@ -153,7 +156,7 @@ $randomNumber: random(5);
     background-color: transparent;
   }
   button {
-    background: $background_color;
+    background: transparent;
     border-radius: 4px;
     box-sizing: border-box;
     padding: 10px;
@@ -175,7 +178,7 @@ $randomNumber: random(5);
 
   .large-btn {
     width: 100%;
-    background: $background_color;
+    background: transparent;
     margin-top: 12%;
     span {
       font-weight: 600;
