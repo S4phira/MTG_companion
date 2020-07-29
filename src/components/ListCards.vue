@@ -53,15 +53,19 @@
         <div class="listCards__loader">
           <div v-if="loading" class="loader"></div>
         </div>
-        <div class="listCards__list" v-show="!loading">
+        <div
+          class="listCards__list"
+          v-show="!loading"
+          v-lazy-container="{ selector: 'img', error:'https://cutt.ly/VsZbBUE', loading: 'https://cutt.ly/VsZbBUE' }"
+        >
           <div
             class="card-box"
             v-for="cards of cards"
             :key="cards.name"
             @click="showInfo(cards.id)"
           >
-            <img :src="cards.img_small" v-if="search" v-show="cards.color == selectedColor" />
-            <img :src="cards.img_small" v-else />
+            <img :data-src="cards.img_small" v-if="search" v-show="cards.color == selectedColor" />
+            <img :data-src="cards.img_small" v-else />
           </div>
         </div>
         <router-link to="/addCards">
