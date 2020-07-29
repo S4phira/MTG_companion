@@ -26,16 +26,8 @@ export default {
   name: "home",
   components: {
     Login,
-    Register
+    Register,
   },
-  methods: {
-    showModalLogin() {
-      this.$modal.show(Login, { height: "500px" });
-    },
-    showModalRegister() {
-      this.$modal.show(Register);
-    }
-  }
 };
 </script>
 

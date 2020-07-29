@@ -1,11 +1,5 @@
 <template>
-  <modal
-    name="login-modal"
-    transition="pop-out"
-    :width="modalWidth"
-    :focus-trap="true"
-    :height="400"
-  >
+  <modal name="login-modal" :width="modalWidth" :focus-trap="true" :height="400">
     <div class="box">
       <div class="box-part" id="bp-left">
         <div class="partition" id="partition-register">
@@ -43,14 +37,14 @@ export default {
   name: "LoginModal",
   data() {
     return {
-      modalWidth: MODAL_WIDTH
+      modalWidth: MODAL_WIDTH,
     };
   },
   methods: {
     login() {
       alert("login");
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -84,7 +78,7 @@ $randomNumber: random(3);
     width: 50%;
 
     &#bp-right {
-      background: url("../assets/login/"+$randomNumber+".jpg") no-repeat top
+      background: url("../assets/login/" + $randomNumber + ".jpg") no-repeat top
         center/cover;
     }
   }

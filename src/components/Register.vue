@@ -1,11 +1,5 @@
 <template>
-  <modal
-    name="register-modal"
-    transition="pop-out"
-    :width="modalWidth"
-    :focus-trap="true"
-    :height="500"
-  >
+  <modal name="register-modal" :width="modalWidth" :focus-trap="true" :height="500">
     <div class="box">
       <div class="box-part" id="bp-left">
         <div class="partition" id="partition-register">
@@ -67,19 +61,19 @@ export default {
         2: { url: "../assets/login/2.jpg", color: "#8085a7" },
         3: { url: "../assets/login/3.jpg", color: "#5dbcd2" },
         4: { url: "../assets/login/4.jpg", color: "#b52d37" },
-        5: { url: "../assets/login/5.jpg", color: "#382d21" }
-      }
+        5: { url: "../assets/login/5.jpg", color: "#382d21" },
+      },
     };
   },
   methods: {
     register() {},
-    checkForm: function(e) {
+    checkForm: function (e) {
       if (this.password != this.password2) {
         this.errorMessage = "passwords do not match";
       } else return true;
       e.preventDefault();
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -113,7 +107,7 @@ $randomNumber: random(3);
     width: 50%;
 
     &#bp-right {
-      background: url("../assets/login/"+$randomNumber+".jpg") no-repeat top
+      background: url("../assets/login/" + $randomNumber + ".jpg") no-repeat top
         center/cover;
     }
   }

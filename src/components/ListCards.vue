@@ -1,5 +1,6 @@
 <template>
   <div style="width:90%">
+    <infoModal />
     <div class="leftMenu">
       <div
         class="color color--red"
@@ -53,9 +54,14 @@
           <div v-if="loading" class="loader"></div>
         </div>
         <div class="listCards__list" v-show="!loading">
-          <div class="card-box" v-for="cards of cards" :key="cards.name">
-            <img :src="cards.img" v-if="search" v-show="cards.color == selectedColor" />
-            <img :src="cards.img" v-else />
+          <div
+            class="card-box"
+            v-for="cards of cards"
+            :key="cards.name"
+            @click="showInfo(cards.id)"
+          >
+            <img :src="cards.img_small" v-if="search" v-show="cards.color == selectedColor" />
+            <img :src="cards.img_small" v-else />
           </div>
         </div>
         <router-link to="/addCards">
@@ -67,8 +73,12 @@
 </template>
 <script>
 import axios from "axios";
+import infoModal from "./InfoCardsModal.vue";
 const urlMultiverse = "https://api.scryfall.com/cards/multiverse/";
 export default {
+  components: {
+    infoModal,
+  },
   data() {
     return {
       loading: false,
@@ -82,6 +92,9 @@ export default {
     this.getCardsId();
   },
   methods: {
+    showInfo(id) {
+      this.$modal.show("info-card", { id: id });
+    },
     async getCardsId() {
       this.loading = true;
       try {
@@ -96,8 +109,10 @@ export default {
     async getCardData(id) {
       const response = await axios.get(urlMultiverse + id);
       this.cards.push({
+        id: id,
         name: response.data.name,
-        img: response.data.image_uris.border_crop,
+        img_small: response.data.image_uris.border_crop,
+        img_large: response.data.image_uris.large,
         prize: response.data.prices.usd,
         color: response.data.colors[0],
       });
@@ -266,6 +281,7 @@ $button-color: rgba(3, 3, 3, 0.774);
   }
   .color:hover {
     width: 100px;
+    cursor: pointer;
     img {
       width: 70px;
       height: 70px;
