@@ -71,6 +71,9 @@
         <router-link to="/addCards">
           <button class="btn btn--back">Add card</button>
         </router-link>
+        <router-link to="/scanCards">
+          <button class="btn btn--back">Scan card</button>
+        </router-link>
       </div>
     </div>
   </div>
