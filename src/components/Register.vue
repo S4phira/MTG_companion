@@ -1,28 +1,35 @@
 <template>
-  <modal
-    name="register-modal"
-    transition="pop-out"
-    :width="modalWidth"
-    :focus-trap="true"
-    :height="500"
-  >
+  <modal name="register-modal" :width="modalWidth" :focus-trap="true" :height="500">
     <div class="box">
       <div class="box-part" id="bp-left">
         <div class="partition" id="partition-register">
           <div class="partition-title">CREATE ACCOUNT</div>
           <div class="partition-form">
-            <form autocomplete="false">
+            <form actions="/register" method="post" autocomplete="false" @submit="checkForm">
               <div class="autocomplete-fix">
                 <input disabled type="password" />
               </div>
-              <input id="n-email" type="text" placeholder="Email" />
-              <input id="n-username" type="text" placeholder="Username" />
-              <input id="n-password" type="password" placeholder="Password" />
-              <input id="n-password2" type="password" placeholder=" Confirm Password" />
+              <input v-model="username" id="username" type="text" placeholder="Username" required />
+              <input v-model="email" id="email" type="email" placeholder="Email" required />
+              <input
+                v-model="password"
+                id="password"
+                type="password"
+                placeholder="Password"
+                required
+              />
+              <input
+                v-model="password2 "
+                id="password2"
+                type="password"
+                placeholder=" Confirm Password"
+                required
+              />
+              <div class="partition-error">{{errorMessage}}</div>
+              <div class="button-set">
+                <button type="submit" id="register-btn" @click="register">Register</button>
+              </div>
             </form>
-            <div class="button-set">
-              <button id="register-btn" @click="register">Register</button>
-            </div>
             <button class="large-btn facebook-btn">
               connect with
               <span>facebook</span>
@@ -43,14 +50,30 @@ export default {
   name: "LoginModal",
   data() {
     return {
-      modalWidth: MODAL_WIDTH
+      username: "",
+      email: "",
+      password: "",
+      password2: "",
+      errorMessage: "",
+      modalWidth: MODAL_WIDTH,
+      backgroundStyle: {
+        1: { url: "../assets/login/1.jpg", color: "#4e5b47" },
+        2: { url: "../assets/login/2.jpg", color: "#8085a7" },
+        3: { url: "../assets/login/3.jpg", color: "#5dbcd2" },
+        4: { url: "../assets/login/4.jpg", color: "#b52d37" },
+        5: { url: "../assets/login/5.jpg", color: "#382d21" },
+      },
     };
   },
   methods: {
-    register() {
-      alert("Register");
-    }
-  }
+    register() {},
+    checkForm: function (e) {
+      if (this.password != this.password2) {
+        this.errorMessage = "passwords do not match";
+      } else return true;
+      e.preventDefault();
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -58,10 +81,14 @@ $background_color: #272727;
 $text_color: #fff;
 $primary_color: #fe8400;
 $facebook_color: #3880ff;
-$randomNumber: random(5);
+$randomNumber: random(3);
 
 .box {
-  background: $background_color;
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(83, 100, 152, 1) 100%
+  );
   overflow: hidden;
   width: 856px;
   height: 500px;
@@ -80,7 +107,7 @@ $randomNumber: random(5);
     width: 50%;
 
     &#bp-right {
-      background: url("../assets/login/"+$randomNumber+".jpg") no-repeat top
+      background: url("../assets/login/" + $randomNumber + ".jpg") no-repeat top
         center/cover;
     }
   }
@@ -124,11 +151,18 @@ $randomNumber: random(5);
       padding: 20px 20px 0 20px;
       box-sizing: border-box;
     }
+    .partition-error {
+      box-sizing: border-box;
+      width: 100%;
+      text-align: center;
+      font-size: 13px;
+      color: rgb(233, 88, 88);
+      margin-top: 10px;
+    }
   }
 
-  input[type="password"],
-  input[type="text"] {
-    background-color: $background_color;
+  input {
+    background-color: transparent;
     display: block;
     box-sizing: border-box;
     margin-bottom: 4px;
@@ -141,19 +175,20 @@ $randomNumber: random(5);
     font-family: inherit;
     transition: 0.5s all;
   }
-  input[type="password"]:focus,
-  input[type="text"]:focus {
+  input:focus {
     border-bottom: 1px solid $primary_color;
     color: $primary_color;
     outline: none;
   }
-  input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0px 1000px $background_color inset;
-    background-color: transparent;
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
   }
 
   button {
-    background: $background_color;
+    background: transparent;
     border-radius: 4px;
     box-sizing: border-box;
     padding: 10px;
@@ -161,7 +196,7 @@ $randomNumber: random(5);
     font-family: "Open Sans", sans-serif;
     font-weight: 400;
     min-width: 190px;
-    margin-top: 35px;
+    margin-top: 15px;
     color: $text_color;
     cursor: pointer;
     border: 1px solid #dddedf;
@@ -176,7 +211,7 @@ $randomNumber: random(5);
 
   .large-btn {
     width: 100%;
-    background: $background_color;
+    background: transparent;
 
     span {
       font-weight: 600;

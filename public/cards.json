@@ -1,0 +1,46 @@
+[
+  {
+    "name": "Uro, Titan of Nature's Wrath",
+    "prices": {
+      "usd": "45.80",
+      "eur": "41.84"
+    },
+    "colors": ["G", "U"],
+    "mana_cost": "{1}{G}{U}",
+    "rarity": "mythic",
+    "img": "https://img.scryfall.com/cards/border_crop/front/a/0/a0b6a71e-56cb-4d25-8f2b-7a4f1b60900d.jpg?1581481163"
+  },
+  {
+    "name": "Nissa, Who Shakes the World",
+    "prices": {
+      "usd": "5.43",
+      "eur": "3.24"
+    },
+    "colors": ["G"],
+    "mana_cost": "{3}{G}{G}",
+    "rarity": "rare",
+    "img": "https://img.scryfall.com/cards/border_crop/front/f/8/f857bbe4-5619-4733-a0c7-69700f2ef4f3.jpg?1557576960"
+  },
+  {
+    "name": "Terror of the Fairgrounds",
+    "prices": {
+      "usd": "0.04",
+      "eur": "0.02"
+    },
+    "colors": ["R"],
+    "mana_cost": "{3}{R}",
+    "rarity": "common",
+    "img": "https://img.scryfall.com/cards/border_crop/front/0/4/04623df9-8fa9-44cc-b528-c2c484626d1f.jpg?1576382287"
+  },
+  {
+    "name": "Audacious Thief",
+    "prices": {
+      "usd": "0.06",
+      "eur": "0.06"
+    },
+    "colors": ["B"],
+    "mana_cost": "{2}{B}",
+    "rarity": "common",
+    "img": "https://img.scryfall.com/cards/border_crop/front/b/a/ba315deb-d5a9-4013-b6ef-e4efe652e569.jpg?1594918449"
+  }
+]
