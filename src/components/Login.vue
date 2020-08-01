@@ -13,9 +13,9 @@
               <input id="n-password" type="password" placeholder="Password" />
             </form>
             <div class="button-set">
-              <button id="login-btn" @click="Login">
-                <router-link to="/cards">Login</router-link>
-              </button>
+              <router-link to="/cards">
+                <button id="login-btn" @click="Login">Login</button>
+              </router-link>
             </div>
             <button class="large-btn facebook-btn">
               Login with
@@ -187,11 +187,7 @@ $randomNumber: random(3);
     display: flex;
     align-items: center;
     justify-content: center;
-    #login-btn a {
-      text-decoration: none;
-      color: $text_color;
-    }
-    #login-btn a:hover {
+    #login-btn:hover {
       color: $primary_color;
     }
   }

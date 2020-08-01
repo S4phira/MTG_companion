@@ -1,75 +1,46 @@
 <template>
   <div style="width:90%">
     <infoModal />
-    <div class="leftMenu">
-      <div
-        class="color color--red"
-        @click="searchColor('R')"
-        :class="{ colorSelect: selectedColor=='R' && search}"
-      >
-        <img src="../assets/logo/R.svg" />
-      </div>
-      <div
-        class="color color--white"
-        @click="searchColor('W')"
-        :class="{ colorSelect: selectedColor=='W' && search}"
-      >
-        <img src="../assets/logo/W.svg" />
-      </div>
-      <div
-        class="color color--blue"
-        @click="searchColor('U')"
-        :class="{ colorSelect: selectedColor=='U'&& search}"
-      >
-        <img src="../assets/logo/U.svg" />
-      </div>
-      <div
-        class="color color--black"
-        @click="searchColor('B')"
-        :class="{ colorSelect: selectedColor=='B' && search}"
-      >
-        <img src="../assets/logo/B.svg" />
-      </div>
-      <div
-        class="color color--green"
-        @click="searchColor('G')"
-        :class="{ colorSelect:selectedColor=='G' && search}"
-      >
-        <img src="../assets/logo/G.svg" />
-      </div>
-    </div>
+    <leftMenu
+      :selectedColor="selectedColor"
+      :cards="cards"
+      v-on:selectedColor="searchColor($event)"
+    />
     <div class="box">
-      <div class="noCards" v-if="cards.length == 0">
+      <div class="noCards" v-if="containers.length == 0">
         <p>Nie masz żadnych dodanych kart.</p>
         <p>kliknij "Rozpocznij" aby dodać</p>
         <router-link to="/addCards">
           <button>Rozpocznij</button>
         </router-link>
       </div>
-      <div class="listCards" v-if="cards.length != 0">
-        <p class="listCards__header">YOUR DECK</p>
-        <p v-if="!search">cards:{{cards.length}} prize:{{totalItems(cards)}} $</p>
-        <p v-else>cards:{{selectedCards.length}} prize:{{totalItems(selectedCards)}} $</p>
+      <div class="listCards" v-if="containers.length != 0">
+        <button v-show="showCards" class="btn" @click="showContainer=true, showCards = false">BACK</button>
+        <p v-show="!showCards" class="listCards__header">YOUR DECK {{selectedColor}}</p>
+        <p v-if="!showCards">All cards: {{sumAllCars}}</p>
+
+        <DecksList :containers="containers" :showContainer="showContainer" />
         <div class="listCards__loader">
           <div v-if="loading" class="loader"></div>
         </div>
         <div
+          id="scroll-target"
           class="listCards__list"
-          v-show="!loading"
-          v-lazy-container="{ selector: 'img', error:'https://cutt.ly/VsZbBUE', loading: 'https://cutt.ly/VsZbBUE' }"
+          v-lazy-container="{ selector: 'img', error:'https://cutt.ly/Ks5PTdD', loading: 'https://filebin.net/m9s8g4xxheas2xf4/back__1___1_.jpg?t=tfqhkkic' }"
         >
           <div
+            v-show="!loading && showCards"
             class="card-box"
-            v-for="cards of cards"
-            :key="cards.name"
-            @click="showInfo(cards.id)"
+            v-for="card of cards"
+            :key="card.name"
+            @click="showInfo(card.id)"
           >
-            <img :data-src="cards.img_small" v-if="search" v-show="cards.color == selectedColor" />
-            <img :data-src="cards.img_small" v-else />
+            <img :data-src="card.img_small" v-if="search" v-show="card.color == selectedColor" />
+            <img :data-src="card.img_small" v-else />
           </div>
         </div>
         <router-link to="/addCards">
-          <button class="btn btn--back">Add card</button>
+          <button class="card btn btn--back">Add card</button>
         </router-link>
         <router-link to="/scanCards">
           <button class="btn btn--back">Scan card</button>
@@ -81,39 +52,55 @@
 <script>
 import axios from "axios";
 import infoModal from "./InfoCardsModal.vue";
+import LeftMenu from "./ListCards/LeftMenu.vue";
+import DecksList from "./ListCards/DecksList.vue";
+
 const urlMultiverse = "https://api.scryfall.com/cards/multiverse/";
 export default {
   components: {
     infoModal,
+    LeftMenu,
+    DecksList,
   },
   data() {
     return {
+      showContainer: true,
+      showCards: false,
       loading: false,
       selectedColor: "",
       selectedCards: [],
       search: false,
       cards: [],
+      containers: [],
+      sumCards: 0,
+      sumAllCars: 0,
     };
   },
   mounted() {
-    this.getCardsId();
+    this.getCardsContainer();
   },
   methods: {
     showInfo(id) {
       this.$modal.show("info-card", { id: id });
     },
-    async getCardsId() {
-      this.loading = true;
+    async getCardsContainer() {
       try {
         const res = await axios.get("cards-id.json");
-        res.data.forEach((card) => {
-          this.getCardData(card.id);
+        res.data.forEach((dataElement) => {
+          this.containers.push(dataElement);
         });
       } catch (error) {
         alert(error);
       }
     },
+    getCardId(index) {
+      this.sumCards = this.containers[index].cards.length;
+      this.containers[index].cards.forEach((card) => this.getCardData(card.id));
+    },
     async getCardData(id) {
+      this.loading = true;
+      this.showCards = true;
+      this.cards = [];
       const response = await axios.get(urlMultiverse + id);
       this.cards.push({
         id: id,
@@ -124,21 +111,32 @@ export default {
         color: response.data.colors[0],
       });
       this.loading = false;
+      this.showContainer = false;
+
+      const element = document.getElementById("scroll-target");
+      element.scrollIntoView({ behavior: "smooth" });
+    },
+
+    totalCards() {
+      for (let property in this.containers) {
+        property.forEach((el) => console.log(el));
+      }
+      //let sum = 0;
+      console.log(this.containers);
+      this.containers.forEach((el) => console.log(el));
+      //  return Math.round(sum);
     },
     searchColor(color) {
-      console.log(this.selectedColor === color);
-      if (this.selectedColor === color || this.selectedColor == "") {
+      if (
+        this.selectedColor === color ||
+        this.selectedColor == "" ||
+        (this.selectedColor != color && !this.search)
+      ) {
         this.search = !this.search;
       }
       this.selectedCards = this.cards.filter((card) => card.color === color);
+
       this.selectedColor = color;
-    },
-    totalItems(array) {
-      let sum = 0;
-      array.forEach((card) => {
-        sum += parseFloat(card.prize) || 0;
-      });
-      return Math.round(sum);
     },
   },
 };
@@ -194,6 +192,7 @@ $button-color: rgba(3, 3, 3, 0.774);
     color: $color-text;
     flex-direction: column;
     align-items: center;
+    min-height: 900px;
 
     &__header {
       font-size: 30px;
@@ -269,38 +268,6 @@ $button-color: rgba(3, 3, 3, 0.774);
           box-shadow: 0 2.5em 0 0;
         }
       }
-    }
-  }
-}
-.leftMenu {
-  position: absolute;
-  left: 0;
-  width: 3.5%;
-  top: 30%;
-  .color {
-    background-color: $background-opacity;
-    padding-right: 10px;
-    margin-bottom: 5px;
-    border-radius: 0 25px 25px 0;
-    img {
-      padding: 10px 0;
-    }
-  }
-  .color:hover {
-    width: 100px;
-    cursor: pointer;
-    img {
-      width: 70px;
-      height: 70px;
-      margin-left: 20px;
-    }
-  }
-  .colorSelect {
-    width: 100px;
-    img {
-      width: 70px;
-      height: 70px;
-      margin-left: 20px;
     }
   }
 }
