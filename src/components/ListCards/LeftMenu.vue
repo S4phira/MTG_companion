@@ -2,35 +2,35 @@
   <div class="leftMenu">
     <div
       class="color color--red"
-      @click="emitColor('R'),searchColor('R')"
+      @click="emitColor('R')"
       :class="{ colorSelect: selectedColor=='R' && search}"
     >
       <img src="../../assets/logo/R.svg" />
     </div>
     <div
       class="color color--white"
-      @click="emitColor('W'),searchColor('W')"
+      @click="emitColor('W')"
       :class="{ colorSelect: selectedColor=='W' && search}"
     >
       <img src="../../assets/logo/W.svg" />
     </div>
     <div
       class="color color--blue"
-      @click="emitColor('U'),searchColor('U')"
+      @click="emitColor('U')"
       :class="{ colorSelect: selectedColor=='U'&& search}"
     >
       <img src="../../assets/logo/U.svg" />
     </div>
     <div
       class="color color--black"
-      @click="emitColor('B'),searchColor('B')"
+      @click="emitColor('B')"
       :class="{ colorSelect: selectedColor=='B' && search}"
     >
       <img src="../../assets/logo/B.svg" />
     </div>
     <div
       class="color color--green"
-      @click="emitColor('G'),searchColor('G')"
+      @click="emitColor('G')"
       :class="{ colorSelect:selectedColor=='G' && search}"
     >
       <img src="../../assets/logo/G.svg" />
@@ -41,7 +41,7 @@
 export default {
   props: {
     selectedColor: String,
-    select: Boolean,
+    search: Boolean,
     cards: Array,
   },
   methods: {
