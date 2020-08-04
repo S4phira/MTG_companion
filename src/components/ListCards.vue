@@ -1,141 +1,125 @@
 <template>
   <div style="width:90%">
-    <infoModal />
-    <div class="leftMenu">
-      <div
-        class="color color--red"
-        @click="searchColor('R')"
-        :class="{ colorSelect: selectedColor=='R' && search}"
-      >
-        <img src="../assets/logo/R.svg" />
-      </div>
-      <div
-        class="color color--white"
-        @click="searchColor('W')"
-        :class="{ colorSelect: selectedColor=='W' && search}"
-      >
-        <img src="../assets/logo/W.svg" />
-      </div>
-      <div
-        class="color color--blue"
-        @click="searchColor('U')"
-        :class="{ colorSelect: selectedColor=='U'&& search}"
-      >
-        <img src="../assets/logo/U.svg" />
-      </div>
-      <div
-        class="color color--black"
-        @click="searchColor('B')"
-        :class="{ colorSelect: selectedColor=='B' && search}"
-      >
-        <img src="../assets/logo/B.svg" />
-      </div>
-      <div
-        class="color color--green"
-        @click="searchColor('G')"
-        :class="{ colorSelect:selectedColor=='G' && search}"
-      >
-        <img src="../assets/logo/G.svg" />
-      </div>
-    </div>
+    <LeftMenu
+      v-show="!loading && showCards"
+      :selectedColor="selectedColor"
+      :cards="cards"
+      :search="search"
+      v-on:selectedColor="searchColor($event)"
+    />
     <div class="box">
-      <div class="noCards" v-if="cards.length == 0">
+      <div class="noCards" v-if="containers.length == 0">
         <p>Nie masz żadnych dodanych kart.</p>
         <p>kliknij "Rozpocznij" aby dodać</p>
         <router-link to="/addCards">
           <button>Rozpocznij</button>
         </router-link>
       </div>
-      <div class="listCards" v-if="cards.length != 0">
-        <p class="listCards__header">YOUR DECK</p>
-        <p v-if="!search">cards:{{cards.length}} prize:{{totalItems(cards)}} $</p>
-        <p v-else>cards:{{selectedCards.length}} prize:{{totalItems(selectedCards)}} $</p>
-        <div class="listCards__loader">
-          <div v-if="loading" class="loader"></div>
-        </div>
-        <div
-          class="listCards__list"
-          v-show="!loading"
-          v-lazy-container="{ selector: 'img', error:'https://cutt.ly/VsZbBUE', loading: 'https://cutt.ly/VsZbBUE' }"
-        >
-          <div
-            class="card-box"
-            v-for="cards of cards"
-            :key="cards.name"
-            @click="showInfo(cards.id)"
-          >
-            <img :data-src="cards.img_small" v-if="search" v-show="cards.color == selectedColor" />
-            <img :data-src="cards.img_small" v-else />
-          </div>
-        </div>
-        <router-link to="/addCards">
-          <button class="btn btn--back">Add card</button>
+      <div class="listCards" v-if="containers.length != 0">
+        <button v-show="showCards" class="btn" @click="showContainer=true, showCards = false">BACK</button>
+        <p class="listCards__allCards" v-if="!showCards">All cards: {{sumAllCars}}</p>
+        <p class="listCards__allCards" v-if="showCards && !search">Value: {{sumValue}} $</p>
+        <DecksList
+          v-show="showContainer"
+          :containers="containers"
+          @sendCardsArray="getCardsArray($event)"
+          @load="showLoader($event)"
+          @sendCardsValue="getCardsValue($event)"
+        />
+        <Loader v-if="loading" />
+        <CardsList
+          v-show="!loading && showCards"
+          :filteredCards="filteredCards"
+          :cards="cards"
+          :search="search"
+        />
+        <!-- <router-link to="/addCards">
+          <button class="card btn btn--back">Add card</button>
         </router-link>
+        <router-link to="/scanCards">
+          <button class="btn btn--back">Scan card</button>
+        </router-link>-->
       </div>
     </div>
   </div>
 </template>
 <script>
 import axios from "axios";
-import infoModal from "./InfoCardsModal.vue";
-const urlMultiverse = "https://api.scryfall.com/cards/multiverse/";
+import LeftMenu from "./ListCards/LeftMenu.vue";
+import DecksList from "./ListCards/DecksList.vue";
+import CardsList from "./ListCards/CardsList.vue";
+import Loader from "./ListCards/Loader.vue";
+
 export default {
   components: {
-    infoModal,
+    LeftMenu,
+    DecksList,
+    CardsList,
+    Loader,
   },
   data() {
     return {
+      showContainer: true,
+      showCards: false,
       loading: false,
       selectedColor: "",
-      selectedCards: [],
       search: false,
       cards: [],
+      filteredCards: [],
+      containers: [],
+      sumCards: 0,
+      sumAllCars: 0,
+      sumValue: 0,
     };
   },
   mounted() {
-    this.getCardsId();
+    this.getCardsContainer();
   },
   methods: {
-    showInfo(id) {
-      this.$modal.show("info-card", { id: id });
+    showLoader(show) {
+      this.loading = show;
     },
-    async getCardsId() {
-      this.loading = true;
+    async getCardsContainer() {
       try {
         const res = await axios.get("cards-id.json");
-        res.data.forEach((card) => {
-          this.getCardData(card.id);
+        res.data.forEach((dataElement) => {
+          this.containers.push(dataElement);
+          this.sumAllCars += dataElement.cards.length;
         });
       } catch (error) {
         alert(error);
       }
     },
-    async getCardData(id) {
-      const response = await axios.get(urlMultiverse + id);
-      this.cards.push({
-        id: id,
-        name: response.data.name,
-        img_small: response.data.image_uris.border_crop,
-        img_large: response.data.image_uris.large,
-        prize: response.data.prices.usd,
-        color: response.data.colors[0],
+    filterColor(color) {
+      this.filteredCards = [];
+      this.cards.forEach((el) => {
+        if (el.color == color) {
+          this.filteredCards.push(el);
+          //  this.sumValue += Math.round(parseFloat(el.prize) || 0);
+        }
       });
+    },
+    getCardsArray(cardsArray) {
+      this.cards = cardsArray;
+      this.showContainer = false;
       this.loading = false;
+      this.showCards = true;
+    },
+    getCardsValue(cardsValue) {
+      this.sumValue = cardsValue;
     },
     searchColor(color) {
-      console.log(this.selectedColor === color);
-      if (this.selectedColor === color || this.selectedColor == "") {
+      if (
+        this.selectedColor === color ||
+        this.selectedColor == "" ||
+        (this.selectedColor != color && !this.search)
+      ) {
         this.search = !this.search;
       }
-      this.selectedCards = this.cards.filter((card) => card.color === color);
+
       this.selectedColor = color;
-    },
-    totalItems(array) {
-      let sum = 0;
-      array.forEach((card) => {
-        sum += parseFloat(card.prize) || 0;
-      });
-      return Math.round(sum);
+      // this.sumValue = 0;
+      this.filterColor(color);
     },
   },
 };
@@ -155,6 +139,8 @@ $button-color: rgba(3, 3, 3, 0.774);
   border-radius: 20px;
   position: relative;
   margin: 3% auto;
+  padding: 3% 0 5%;
+  min-height: 450px;
   .noCards {
     p {
       color: $color-text;
@@ -195,109 +181,11 @@ $button-color: rgba(3, 3, 3, 0.774);
     &__header {
       font-size: 30px;
     }
-    &__list {
-      margin: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      .card-box {
-        img {
-          width: 230px;
-          height: 310px;
-          padding: 5px;
-        }
-      }
-    }
-    &__loader {
-      .loader,
-      .loader:before,
-      .loader:after {
-        border-radius: 50%;
-        width: 2.5em;
-        height: 2.5em;
-        -webkit-animation-fill-mode: both;
-        animation-fill-mode: both;
-        -webkit-animation: load7 1.8s infinite ease-in-out;
-        animation: load7 1.8s infinite ease-in-out;
-      }
-      .loader {
-        color: #ffffff;
-        font-size: 10px;
-        margin: 0 auto 80px;
-        position: relative;
-        text-indent: -9999em;
-        -webkit-transform: translateZ(0);
-        -ms-transform: translateZ(0);
-        transform: translateZ(0);
-        -webkit-animation-delay: -0.16s;
-        animation-delay: -0.16s;
-      }
-      .loader:before,
-      .loader:after {
-        content: "";
-        position: absolute;
-        top: 0;
-      }
-      .loader:before {
-        left: -3.5em;
-        -webkit-animation-delay: -0.32s;
-        animation-delay: -0.32s;
-      }
-      .loader:after {
-        left: 3.5em;
-      }
-      @-webkit-keyframes load7 {
-        0%,
-        80%,
-        100% {
-          box-shadow: 0 2.5em 0 -1.3em;
-        }
-        40% {
-          box-shadow: 0 2.5em 0 0;
-        }
-      }
-      @keyframes load7 {
-        0%,
-        80%,
-        100% {
-          box-shadow: 0 2.5em 0 -1.3em;
-        }
-        40% {
-          box-shadow: 0 2.5em 0 0;
-        }
-      }
-    }
-  }
-}
-.leftMenu {
-  position: absolute;
-  left: 0;
-  width: 3.5%;
-  top: 30%;
-  .color {
-    background-color: $background-opacity;
-    padding-right: 10px;
-    margin-bottom: 5px;
-    border-radius: 0 25px 25px 0;
-    img {
-      padding: 10px 0;
-    }
-  }
-  .color:hover {
-    width: 100px;
-    cursor: pointer;
-    img {
-      width: 70px;
-      height: 70px;
-      margin-left: 20px;
-    }
-  }
-  .colorSelect {
-    width: 100px;
-    img {
-      width: 70px;
-      height: 70px;
-      margin-left: 20px;
+    &__allCards {
+      font-size: 24px;
+      align-self: flex-end;
+      padding-right: 30px;
+      text-transform: uppercase;
     }
   }
 }

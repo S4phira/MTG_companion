@@ -29,7 +29,7 @@ export default {
       card: [],
       loading: false,
       error: "",
-      search: ""
+      search: "",
     };
   },
   methods: {
@@ -46,14 +46,7 @@ export default {
       this.loading = false;
       this.search = "";
     },
-    async addCard() {
-      const res = await axios.post(
-        "http://localhost/public/cards.json",
-        this.card
-      );
-      console.log(res);
-    }
-  }
+  },
 };
 </script>
 <style lang="scss">
