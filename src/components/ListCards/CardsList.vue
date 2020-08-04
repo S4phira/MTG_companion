@@ -5,8 +5,10 @@
     v-lazy-container="{ selector: 'img', error:urlLazyLoad, loading: urlLazyLoad }"
   >
     <div class="card-box" v-for="card of cards" :key="card.name" @click="showInfo(card.id)">
-      <img :data-src="card.img_small" v-if="search" v-show="card.color == selectedColor" />
-      <img :data-src="card.img_small" v-else />
+      <img :data-src="card.img_small" v-if="!search" />
+    </div>
+    <div class="card-box" v-for="card of filteredCards" :key="card.id" @click="showInfo(card.id)">
+      <img :data-src="card.img_small" v-if="search" />
     </div>
     <InfoModal />
   </div>
@@ -24,8 +26,8 @@ export default {
     };
   },
   props: {
-    selectedColor: String,
     cards: Array,
+    filteredCards: Array,
     search: Boolean,
   },
   methods: {

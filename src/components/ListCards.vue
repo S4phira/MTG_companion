@@ -1,6 +1,7 @@
 <template>
   <div style="width:90%">
     <LeftMenu
+      v-show="!loading && showCards"
       :selectedColor="selectedColor"
       :cards="cards"
       :search="search"
@@ -16,28 +17,28 @@
       </div>
       <div class="listCards" v-if="containers.length != 0">
         <button v-show="showCards" class="btn" @click="showContainer=true, showCards = false">BACK</button>
-        <p v-show="!showCards" class="listCards__header">YOUR DECK</p>
-        <p v-if="!showCards">All cards: {{sumAllCars}}</p>
-
+        <p class="listCards__allCards" v-if="!showCards">All cards: {{sumAllCars}}</p>
+        <p class="listCards__allCards" v-if="showCards && !search">Value: {{sumValue}} $</p>
         <DecksList
           v-show="showContainer"
           :containers="containers"
           @sendCardsArray="getCardsArray($event)"
           @load="showLoader($event)"
+          @sendCardsValue="getCardsValue($event)"
         />
         <Loader v-if="loading" />
         <CardsList
           v-show="!loading && showCards"
+          :filteredCards="filteredCards"
           :cards="cards"
-          :selectedColor="selectedColor"
           :search="search"
         />
-        <router-link to="/addCards">
+        <!-- <router-link to="/addCards">
           <button class="card btn btn--back">Add card</button>
         </router-link>
         <router-link to="/scanCards">
           <button class="btn btn--back">Scan card</button>
-        </router-link>
+        </router-link>-->
       </div>
     </div>
   </div>
@@ -64,9 +65,11 @@ export default {
       selectedColor: "",
       search: false,
       cards: [],
+      filteredCards: [],
       containers: [],
       sumCards: 0,
       sumAllCars: 0,
+      sumValue: 0,
     };
   },
   mounted() {
@@ -87,11 +90,23 @@ export default {
         alert(error);
       }
     },
+    filterColor(color) {
+      this.filteredCards = [];
+      this.cards.forEach((el) => {
+        if (el.color == color) {
+          this.filteredCards.push(el);
+          //  this.sumValue += Math.round(parseFloat(el.prize) || 0);
+        }
+      });
+    },
     getCardsArray(cardsArray) {
       this.cards = cardsArray;
       this.showContainer = false;
       this.loading = false;
       this.showCards = true;
+    },
+    getCardsValue(cardsValue) {
+      this.sumValue = cardsValue;
     },
     searchColor(color) {
       if (
@@ -103,6 +118,8 @@ export default {
       }
 
       this.selectedColor = color;
+      // this.sumValue = 0;
+      this.filterColor(color);
     },
   },
 };
@@ -122,6 +139,8 @@ $button-color: rgba(3, 3, 3, 0.774);
   border-radius: 20px;
   position: relative;
   margin: 3% auto;
+  padding: 3% 0 5%;
+  min-height: 450px;
   .noCards {
     p {
       color: $color-text;
@@ -158,10 +177,15 @@ $button-color: rgba(3, 3, 3, 0.774);
     color: $color-text;
     flex-direction: column;
     align-items: center;
-    min-height: 900px;
 
     &__header {
       font-size: 30px;
+    }
+    &__allCards {
+      font-size: 24px;
+      align-self: flex-end;
+      padding-right: 30px;
+      text-transform: uppercase;
     }
   }
 }
