@@ -8,7 +8,7 @@
       <ul class="menu">
         <div class="menu__box">
           <li v-for="(link, index) in navLinks" :key="index">
-            <router-link :to="link.path" :style="{ color: '#DDD' }">{{ link.text }}</router-link>
+            <router-link :to="link.path">{{ link.text }}</router-link>
           </li>
         </div>
       </ul>
@@ -30,6 +30,7 @@ nav {
   top: 0;
   z-index: 30;
   height: 100%;
+  position: fixed;
   .menuToggle {
     display: block;
     position: relative;
@@ -108,13 +109,17 @@ nav {
       transform-origin: 0% 0%;
       transform: translate(-100%, 0);
       transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
-      padding-top: 40%;
+      padding-top: 5%;
       &__box {
-        padding-top: 60px;
+        padding-top: 100px;
         li {
           font-size: 35px;
           padding: 60px 0;
           text-align: center;
+          a {
+            color: white;
+            text-transform: uppercase;
+          }
         }
       }
     }
