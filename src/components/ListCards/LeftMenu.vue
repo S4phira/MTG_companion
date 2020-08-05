@@ -58,35 +58,30 @@ $color-text: #fff;
 $button-color: rgba(3, 3, 3, 0.774);
 .leftMenu {
   position: absolute;
-  left: 0;
-  width: 3.5%;
+  right: 0;
+  width: 130px;
   top: 30%;
   position: fixed;
   .color {
+    margin-left: 30px;
     background-color: $background-opacity;
     padding-right: 10px;
     margin-bottom: 5px;
-    border-radius: 0 25px 25px 0;
+    border-radius: 25px 0 0 25px;
+    -webkit-transition: margin 0.5s ease-out;
+    -moz-transition: margin 0.5s ease-out;
+    -o-transition: margin 0.5s ease-out;
     img {
-      padding: 10px 0;
+      width: 70%;
+      padding: 10px 0 10px 20px;
     }
   }
   .color:hover {
-    width: 100px;
+    margin-left: 0;
     cursor: pointer;
-    img {
-      width: 70px;
-      height: 70px;
-      margin-left: 20px;
-    }
   }
   .colorSelect {
-    width: 100px;
-    img {
-      width: 70px;
-      height: 70px;
-      margin-left: 20px;
-    }
+    margin-left: 0;
   }
 }
 </style>

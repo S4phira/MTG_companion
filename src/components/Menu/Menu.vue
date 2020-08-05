@@ -28,9 +28,9 @@ nav {
   position: absolute;
   left: 0;
   top: 0;
-  z-index: 30;
   height: 100%;
   position: fixed;
+  z-index: 30;
   .menuToggle {
     display: block;
     position: relative;
@@ -81,19 +81,11 @@ nav {
       transform: rotate(45deg) translate(-2px, -1px);
       background: #232323;
     }
-    input:checked ~ span {
-      opacity: 1;
-      transform: rotate(45deg) translate(-2px, -1px);
-      background: #232323;
-    }
     input:checked ~ span:nth-last-child(3) {
       opacity: 0;
       transform: rotate(0deg) scale(0.2, 0.2);
     }
-    input:checked ~ span:nth-last-child(3) {
-      opacity: 0;
-      transform: rotate(0deg) scale(0.2, 0.2);
-    }
+
     input:checked ~ span:nth-last-child(2) {
       transform: rotate(-45deg) translate(0, -1px);
     }
@@ -101,7 +93,7 @@ nav {
       position: absolute;
       width: 300px;
       margin: -100px 0 0 -50px;
-      height: 100%;
+      height: 110%;
       padding-right: 30px;
       background: $background-opacity;
       list-style-type: none;

@@ -49,7 +49,7 @@ export default {
   data() {
     return {
       urlLazyLoad:
-        "https://filebin.net/m9s8g4xxheas2xf4/back__1___1_.jpg?t=tfqhkkic",
+        "https://cdn.discordapp.com/attachments/719513391219343370/740696234796515348/back_1_1.jpg",
       currentPage: 1,
       cardsPerPage: 12,
     };
@@ -75,6 +75,27 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+
+  img[lazy="loading"] {
+    opacity: 0.3;
+  }
+  img[lazy="loaded"] {
+    opacity: 0.4;
+    animation-name: fadein;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-direction: normal;
+    animation-timing-function: ease-out;
+    @keyframes fadein {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+  }
   .card-box {
     img {
       width: 230px;
