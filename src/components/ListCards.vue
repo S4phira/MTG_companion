@@ -5,7 +5,7 @@
       :selectedColor="selectedColor"
       :cards="cards"
       :search="search"
-      v-on:selectedColor="searchColor($event)"
+      @selectedColor="searchColor($event)"
     />
     <div class="box">
       <div class="noCards" v-if="containers.length == 0">
@@ -95,7 +95,6 @@ export default {
       this.cards.forEach((el) => {
         if (el.color == color) {
           this.filteredCards.push(el);
-          //  this.sumValue += Math.round(parseFloat(el.prize) || 0);
         }
       });
     },
@@ -118,7 +117,6 @@ export default {
       }
 
       this.selectedColor = color;
-      // this.sumValue = 0;
       this.filterColor(color);
     },
   },
@@ -138,7 +136,7 @@ $button-color: rgba(3, 3, 3, 0.774);
   justify-content: center;
   border-radius: 20px;
   position: relative;
-  margin: 3% auto;
+  margin: 1% auto;
   padding: 3% 0 5%;
   min-height: 450px;
   .noCards {
