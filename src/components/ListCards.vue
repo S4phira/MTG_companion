@@ -16,7 +16,12 @@
         </router-link>
       </div>
       <div class="listCards" v-if="containers.length != 0">
-        <button v-show="showCards" class="btn" @click="showContainer=true, showCards = false">BACK</button>
+        <button
+          v-show="showCards"
+          class="btn"
+          @click="showContainer=true, showCards = false,
+          search=false"
+        >BACK</button>
         <p class="listCards__allCards" v-if="!showCards">All cards: {{sumAllCars}}</p>
         <p class="listCards__allCards" v-if="showCards && !search">Value: {{sumValue}} $</p>
         <DecksList

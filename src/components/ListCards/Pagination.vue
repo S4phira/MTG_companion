@@ -1,6 +1,11 @@
 <template>
   <div class="page-box">
-    <sliding-pagination :current="currentPage" :total="totalPages" @page-change="setCurrentPage"></sliding-pagination>
+    <sliding-pagination
+      v-show="totalPages>1"
+      :current="currentPage"
+      :total="totalPages"
+      @page-change="setCurrentPage"
+    ></sliding-pagination>
   </div>
 </template>
 <script>

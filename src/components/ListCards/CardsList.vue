@@ -22,6 +22,7 @@
     >
       <img :data-src="card.img_small" v-if="search" />
     </div>
+    <div class="noMatchCards" v-if="filteredCards.length== 0 && search">Brak dopasowanych kart</div>
     <InfoModal />
     <Pagination
       v-if="!search"
@@ -80,6 +81,10 @@ export default {
       height: 310px;
       padding: 5px;
     }
+  }
+  .noMatchCards {
+    font-size: 50px;
+    padding: 10% 0;
   }
   button.page-link {
     display: inline-block;
