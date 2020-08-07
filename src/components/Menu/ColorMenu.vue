@@ -1,39 +1,34 @@
 <template>
   <div class="leftMenu">
     <div
-      class="color color--red"
+      class="color"
       @click="emitColor('R')"
       :class="{ colorSelect: selectedColor=='R' && search}"
     >
       <img src="../../assets/logo/R.svg" />
     </div>
     <div
-      class="color color--white"
+      class="color"
       @click="emitColor('W')"
       :class="{ colorSelect: selectedColor=='W' && search}"
     >
       <img src="../../assets/logo/W.svg" />
     </div>
-    <div
-      class="color color--blue"
-      @click="emitColor('U')"
-      :class="{ colorSelect: selectedColor=='U'&& search}"
-    >
+    <div class="color" @click="emitColor('U')" :class="{ colorSelect: selectedColor=='U'&& search}">
       <img src="../../assets/logo/U.svg" />
     </div>
     <div
-      class="color color--black"
+      class="color"
       @click="emitColor('B')"
       :class="{ colorSelect: selectedColor=='B' && search}"
     >
       <img src="../../assets/logo/B.svg" />
     </div>
-    <div
-      class="color color--green"
-      @click="emitColor('G')"
-      :class="{ colorSelect:selectedColor=='G' && search}"
-    >
+    <div class="color" @click="emitColor('G')" :class="{ colorSelect:selectedColor=='G' && search}">
       <img src="../../assets/logo/G.svg" />
+    </div>
+    <div class="color" @click="emitColor('C')" :class="{ colorSelect:selectedColor=='C' && search}">
+      <img src="../../assets/logo/C.svg" />
     </div>
   </div>
 </template>

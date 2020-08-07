@@ -1,9 +1,5 @@
 <template>
-  <div
-    id="scroll-target"
-    class="list"
-    v-lazy-container="{ selector: 'img', error:urlLazyLoad, loading: urlLazyLoad }"
-  >
+  <div class="list" v-lazy-container="{ selector: 'img', error:urlLazyLoad }">
     <div
       class="card-box"
       v-for="(card,index) of cards"

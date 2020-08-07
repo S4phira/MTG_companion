@@ -58,6 +58,11 @@ export default {
 
       this.$emit("load", this.loading);
     },
+    addColors(colors) {
+      let collorsArray = [];
+      colors.forEach((el) => collorsArray.push(el));
+      return collorsArray;
+    },
     async getCardData(id) {
       this.cards = [];
       const response = await axios.get(urlMultiverse + id);
@@ -67,7 +72,7 @@ export default {
         img_small: response.data.image_uris.border_crop,
         img_large: response.data.image_uris.large,
         prize: response.data.prices.usd,
-        color: response.data.colors[0],
+        color: this.addColors(response.data.colors),
       });
       this.$emit("sendCardsArray", this.cards);
       this.sumValue += Math.round(parseFloat(response.data.prices.usd) || 0);

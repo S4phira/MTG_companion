@@ -1,6 +1,6 @@
 <template>
   <div style="width:90%">
-    <LeftMenu
+    <ColorMenu
       v-show="!loading && showCards"
       :selectedColor="selectedColor"
       :cards="cards"
@@ -22,10 +22,11 @@
           @click="showContainer=true, showCards = false,
           search=false"
         >BACK</button>
-        <p class="listCards__allCards" v-if="!showCards">All cards: {{sumAllCars}}</p>
+        <button class="btn" @click="showAllCards=true">All cards</button>
+        <p class="listCards__allCards" v-if="!showCards">All cards: {{sumAllCards}}</p>
         <p class="listCards__allCards" v-if="showCards && !search">Value: {{sumValue}} $</p>
         <DecksList
-          v-show="showContainer"
+          v-show="showContainer && !showAllCards"
           :containers="containers"
           @sendCardsArray="getCardsArray($event)"
           @load="showLoader($event)"
@@ -38,28 +39,25 @@
           :cards="cards"
           :search="search"
         />
-        <!-- <router-link to="/addCards">
-          <button class="card btn btn--back">Add card</button>
-        </router-link>
-        <router-link to="/scanCards">
-          <button class="btn btn--back">Scan card</button>
-        </router-link>-->
+        <AllCards v-show="showAllCards" :containers="containers" :sumAllCards="sumAllCards" />
       </div>
     </div>
   </div>
 </template>
 <script>
 import axios from "axios";
-import LeftMenu from "./ListCards/LeftMenu.vue";
+import ColorMenu from "./Menu/ColorMenu.vue";
 import DecksList from "./ListCards/DecksList.vue";
 import CardsList from "./ListCards/CardsList.vue";
+import AllCards from "./ListCards/AllCardsList.vue";
 import Loader from "./ListCards/Loader.vue";
 
 export default {
   components: {
-    LeftMenu,
+    ColorMenu,
     DecksList,
     CardsList,
+    AllCards,
     Loader,
   },
   data() {
@@ -73,8 +71,9 @@ export default {
       filteredCards: [],
       containers: [],
       sumCards: 0,
-      sumAllCars: 0,
+      sumAllCards: 0,
       sumValue: 0,
+      showAllCards: false,
     };
   },
   mounted() {
@@ -89,7 +88,7 @@ export default {
         const res = await axios.get("cards-id.json");
         res.data.forEach((dataElement) => {
           this.containers.push(dataElement);
-          this.sumAllCars += dataElement.cards.length;
+          this.sumAllCards += dataElement.cards.length;
         });
       } catch (error) {
         alert(error);
@@ -97,10 +96,15 @@ export default {
     },
     filterColor(color) {
       this.filteredCards = [];
-      this.cards.forEach((el) => {
-        if (el.color == color) {
-          this.filteredCards.push(el);
+      this.cards.forEach((card) => {
+        if (card.color.length == 0) {
+          card.color.push("C");
         }
+        card.color.forEach((elementColor) => {
+          if (elementColor == color) {
+            this.filteredCards.push(card);
+          }
+        });
       });
     },
     getCardsArray(cardsArray) {
