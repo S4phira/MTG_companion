@@ -1,13 +1,15 @@
 <template>
-  <div class="list" v-lazy-container="{ selector: 'img'}">
-    <div class="card-box" v-for="card of cards" :key="card.name">
-      <img :data-src="card.img_small" />
+  <div class="box">
+    <div class="list" v-lazy-container="{ selector: 'img'}">
+      <div class="card-box" v-for="card of cards" :key="card.name">
+        <img :data-src="card.img_small" />
+      </div>
+      <Pagination
+        :cards="cards"
+        :totalPages="Math.ceil(this.sumCards / this.totalCardsPerPage)"
+        @setCurrentPage="setCurrentPage($event)"
+      />
     </div>
-    <Pagination
-      :cards="cards"
-      :totalPages="Math.ceil(this.sumAllCards / this.totalCardsPerPage)"
-      @setCurrentPage="setCurrentPage($event)"
-    />
   </div>
 </template>
 <script>
@@ -19,22 +21,34 @@ export default {
   components: {
     Pagination,
   },
-  props: {
-    containers: Array,
-    sumAllCards: Number,
-  },
   data() {
     return {
+      containers: [],
       cards: [],
       currentIndexPage: 1,
       totalCardsPerPage: 18,
       allCards: [],
+      sumCards: 0,
     };
   },
   mounted() {
+    this.getCards();
     this.getCardData();
   },
+
   methods: {
+    async getCards() {
+      try {
+        const res = await axios.get("cards-id.json");
+        res.data.forEach((dataElement) => {
+          this.containers.push(dataElement);
+          this.sumCards += dataElement.cards.length;
+        });
+        this.getCardData();
+      } catch (error) {
+        alert(error);
+      }
+    },
     getCardData() {
       this.containers.forEach((el) => {
         el.cards.forEach((card) => this.allCards.push(card.id));
@@ -75,6 +89,20 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+$background-opacity: rgba(3, 3, 3, 0.404);
+.box {
+  width: 90%;
+  height: auto;
+  background-color: $background-opacity;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  position: relative;
+  margin: 1% auto;
+  padding: 3% 0 5%;
+  min-height: 450px;
+}
 .list {
   margin: 10px;
   display: flex;

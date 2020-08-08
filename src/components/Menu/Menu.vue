@@ -23,7 +23,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
-$background-opacity: rgb(3, 3, 3);
+$background: rgb(3, 3, 3);
+
 nav {
   position: absolute;
   left: 0;
@@ -95,7 +96,7 @@ nav {
       margin: -100px 0 0 -50px;
       height: 110%;
       padding-right: 30px;
-      background: $background-opacity;
+      background: $background;
       list-style-type: none;
       -webkit-font-smoothing: antialiased;
       transform-origin: 0% 0%;
@@ -111,6 +112,9 @@ nav {
           a {
             color: white;
             text-transform: uppercase;
+          }
+          li:active > a {
+            background-color: white;
           }
         }
       }

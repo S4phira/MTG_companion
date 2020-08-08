@@ -25,6 +25,10 @@ export default {
         text: "Decks List",
         path: "/cards",
       },
+      {
+        text: "All cards",
+        path: "/allCards",
+      },
     ],
   }),
 };

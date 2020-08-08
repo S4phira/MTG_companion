@@ -22,7 +22,6 @@
           @click="showContainer=true, showCards = false,
           search=false"
         >BACK</button>
-        <button class="btn" @click="showAllCards=true">All cards</button>
         <p class="listCards__allCards" v-if="!showCards">All cards: {{sumAllCards}}</p>
         <p class="listCards__allCards" v-if="showCards && !search">Value: {{sumValue}} $</p>
         <DecksList
@@ -39,7 +38,6 @@
           :cards="cards"
           :search="search"
         />
-        <AllCards v-show="showAllCards" :containers="containers" :sumAllCards="sumAllCards" />
       </div>
     </div>
   </div>
@@ -49,7 +47,6 @@ import axios from "axios";
 import ColorMenu from "./Menu/ColorMenu.vue";
 import DecksList from "./ListCards/DecksList.vue";
 import CardsList from "./ListCards/CardsList.vue";
-import AllCards from "./ListCards/AllCardsList.vue";
 import Loader from "./ListCards/Loader.vue";
 
 export default {
@@ -57,7 +54,6 @@ export default {
     ColorMenu,
     DecksList,
     CardsList,
-    AllCards,
     Loader,
   },
   data() {
