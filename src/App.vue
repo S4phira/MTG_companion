@@ -1,16 +1,43 @@
 <template>
   <div id="app">
+    <Menu :nav-links="navLinks" />
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-export default {};
+import Menu from "./components/Menu/Menu.vue";
+export default {
+  components: {
+    Menu,
+  },
+  data: () => ({
+    navLinks: [
+      {
+        text: "Add cards",
+        path: "/addCards",
+      },
+      {
+        text: "Scan Cards",
+        path: "/scanCards",
+      },
+      {
+        text: "Decks List",
+        path: "/cards",
+      },
+      {
+        text: "All cards",
+        path: "/allCards",
+      },
+    ],
+  }),
+};
 </script>
 
 <style lang="scss">
 body {
   margin: 0;
+  height: 100%;
 }
 #app {
   font-family: "Rowdies", cursive;

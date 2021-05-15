@@ -1,11 +1,11 @@
 <template>
   <div style="width:90%">
-    <LeftMenu
+    <ColorMenu
       v-show="!loading && showCards"
       :selectedColor="selectedColor"
       :cards="cards"
       :search="search"
-      v-on:selectedColor="searchColor($event)"
+      @selectedColor="searchColor($event)"
     />
     <div class="box">
       <div class="noCards" v-if="containers.length == 0">
@@ -16,11 +16,16 @@
         </router-link>
       </div>
       <div class="listCards" v-if="containers.length != 0">
-        <button v-show="showCards" class="btn" @click="showContainer=true, showCards = false">BACK</button>
-        <p class="listCards__allCards" v-if="!showCards">All cards: {{sumAllCars}}</p>
+        <button
+          v-show="showCards"
+          class="btn"
+          @click="showContainer=true, showCards = false,
+          search=false"
+        >BACK</button>
+        <p class="listCards__allCards" v-if="!showCards">All cards: {{sumAllCards}}</p>
         <p class="listCards__allCards" v-if="showCards && !search">Value: {{sumValue}} $</p>
         <DecksList
-          v-show="showContainer"
+          v-show="showContainer && !showAllCards"
           :containers="containers"
           @sendCardsArray="getCardsArray($event)"
           @load="showLoader($event)"
@@ -33,26 +38,20 @@
           :cards="cards"
           :search="search"
         />
-        <!-- <router-link to="/addCards">
-          <button class="card btn btn--back">Add card</button>
-        </router-link>
-        <router-link to="/scanCards">
-          <button class="btn btn--back">Scan card</button>
-        </router-link>-->
       </div>
     </div>
   </div>
 </template>
 <script>
 import axios from "axios";
-import LeftMenu from "./ListCards/LeftMenu.vue";
+import ColorMenu from "./Menu/ColorMenu.vue";
 import DecksList from "./ListCards/DecksList.vue";
 import CardsList from "./ListCards/CardsList.vue";
 import Loader from "./ListCards/Loader.vue";
 
 export default {
   components: {
-    LeftMenu,
+    ColorMenu,
     DecksList,
     CardsList,
     Loader,
@@ -68,8 +67,9 @@ export default {
       filteredCards: [],
       containers: [],
       sumCards: 0,
-      sumAllCars: 0,
+      sumAllCards: 0,
       sumValue: 0,
+      showAllCards: false,
     };
   },
   mounted() {
@@ -84,7 +84,7 @@ export default {
         const res = await axios.get("cards-id.json");
         res.data.forEach((dataElement) => {
           this.containers.push(dataElement);
-          this.sumAllCars += dataElement.cards.length;
+          this.sumAllCards += dataElement.cards.length;
         });
       } catch (error) {
         alert(error);
@@ -92,11 +92,15 @@ export default {
     },
     filterColor(color) {
       this.filteredCards = [];
-      this.cards.forEach((el) => {
-        if (el.color == color) {
-          this.filteredCards.push(el);
-          //  this.sumValue += Math.round(parseFloat(el.prize) || 0);
+      this.cards.forEach((card) => {
+        if (card.color.length == 0) {
+          card.color.push("C");
         }
+        card.color.forEach((elementColor) => {
+          if (elementColor == color) {
+            this.filteredCards.push(card);
+          }
+        });
       });
     },
     getCardsArray(cardsArray) {
@@ -118,7 +122,6 @@ export default {
       }
 
       this.selectedColor = color;
-      // this.sumValue = 0;
       this.filterColor(color);
     },
   },
@@ -138,7 +141,7 @@ $button-color: rgba(3, 3, 3, 0.774);
   justify-content: center;
   border-radius: 20px;
   position: relative;
-  margin: 3% auto;
+  margin: 1% auto;
   padding: 3% 0 5%;
   min-height: 450px;
   .noCards {
